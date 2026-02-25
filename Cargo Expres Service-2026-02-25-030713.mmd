@@ -1,0 +1,41 @@
+---
+config:
+  layout: dagre
+  theme: neutral
+---
+flowchart LR
+    %% === Actores externos ===
+    subgraph Externos["Actores Externos"]
+        Admin["Administrador"]
+        Empresa["Empresa"]
+        Cliente["Cliente"]
+        Repartidor["Repartidor"]
+    end
+
+    %% === Sistema Principal ===
+    subgraph Sistema["Cargo Expres"]
+        subgraph Modulos["Módulos Internos"]
+            Auth["Autenticación"]
+            Paquetes["Gestión de Paquetes"]
+            Rutas["Optimización de Rutas"]
+            Mapa["Visualización en Mapa"]
+        end
+        DB[("Base de Datos")]
+        Mapas["Servicio de Mapas"]
+    end
+
+    %% === Flujos principales ===
+    Admin -->|Gestiona usuarios y datos| Auth
+    Empresa -->|Registra paquetes| Paquetes
+    Cliente -->|Consulta estado de envío| Paquetes
+    Repartidor -->|Recibe ruta de entrega| Rutas
+
+    %% === Interacciones internas ===
+    Paquetes -->|Guarda información| DB
+    Rutas -->|Lee destinos y calcula| Paquetes
+    Rutas -->|Usa coordenadas| Mapas
+    Mapa -->|Muestra ruta óptima| Repartidor
+
+    %% Conexiones de soporte
+    Auth --> DB
+    Paquetes --> Auth
